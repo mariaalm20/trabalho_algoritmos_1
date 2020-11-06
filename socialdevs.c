@@ -14,7 +14,7 @@ struct data_devs
 };
 
 
-void cadastro(struct data_devs *d, int *code)
+void create(struct data_devs *d, int *code)
 {
     char t; //só pra definir uma tecla de atalho
 
@@ -124,7 +124,7 @@ int main(){
             {
                 switch(resp){
                 case 1:
-                    cadastro(devs, &code); //se for cadastro. Livro é equivalente ao ponteiro l e cont ao ponteiro cont. Precisa passar eles como parametro
+                    create(devs, &code); //se for cadastro. Livro é equivalente ao ponteiro l e cont ao ponteiro cont. Precisa passar eles como parametro
                 break;
                 case 2:
                     delete(devs, &code); //mesma coisa que o de cima
