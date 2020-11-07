@@ -20,6 +20,7 @@ struct data_devs
 #define CONSULTAR '4'
 
 char *menuMain[] = {
+    "\n---- MENU ----\n\n",
     "1. Cadastro",
     "2. Deletar",
     "3. Listar",
@@ -27,28 +28,28 @@ char *menuMain[] = {
     "0. Sair",
     NULL};
 
-char Menu(char *opcoes[])
-{ 
-    int i;
-    char ch;
-    while (1)
-    {
-        for (i = 0; opcoes[i] != NULL; i++)
-            printf("%s\n\n", opcoes[i]);
+char Menu(char *options[]){ //Necessário para selecionar as opções do menu
+  int i;
+  char optionChoose;
 
-        printf("\n\nOpção: ");
-        ch = getchar();
-        fflush(stdin);
+  while(1){ //pois o usuário só pode escolher uma opção
+  for(i=0; options[i]!=NULL; i++){ //percorre o vetor do menu e não mostra a opção null
+  printf("%s\n\n",options[i]); //mostra as opções na tela
+  }
 
-        for (i = 0; opcoes[i] != NULL; i++)
-        {
-            if (opcoes[i][0] == ch)
-            {
-                return ch;
-            }
-        }
+  printf("\n\nOpção escolhida: ");
+  optionChoose = getchar(); //le a opção
+  fflush(stdin);
+  
+  for(i=0; options[i]!= NULL; i++){ //percorre o vetor 
+  if(options[i][0]==optionChoose){
+    return optionChoose;
     }
+   }
+  }
+  
 }
+
 
 int login(struct data_devs *d, int *code)
 {
@@ -91,16 +92,16 @@ int login(struct data_devs *d, int *code)
                 b = 1;
                 validate = 0;
             }
-        } while (b && try);
+        } while (b && try); //diferente de 0
 
-        if (!try)
+       /* if (!try)
         {
             printf("Número máximo de tentativas alcançado! \n\nAperte enter ou qualquer tecla para retornar ao menu.\n");
             fflush(stdin);
             setbuf(stdin, NULL);
 
             scanf("%c", &t);
-        }
+        }*/
     }
 
 
@@ -108,6 +109,12 @@ int login(struct data_devs *d, int *code)
     {
          Menu(menuMain);
          return 1;
+    }else{
+         printf("Número máximo de tentativas alcançado! \n\nAperte enter ou qualquer tecla para retornar ao menu.\n");
+            fflush(stdin);
+            setbuf(stdin, NULL);
+
+            scanf("%c", &t);
     }
     system("clear");
 }
@@ -257,13 +264,13 @@ void consult(struct data_devs *d, int *code)
     {
     case 1: //caso escolha consultar pelo id
         system("clear");
-        printf("\nInsira o id do DEV a ser consultado:\n\n");
+        printf("\nInsira o id do DEV a ser consultado:\n");
         scanf("%d", &ids);
         for (i = 0; i <= *code; i++) //percorre o vetor de devs
         {
             if (ids == d[i].id)
             {
-                printf("\nNome: %s\nUsuario: %s\nID: %d\nEmail: %s\nPassword: %s\nBio: %s\n", d[i].name, d[i].user, d[i].id, d[i].email, d[i].password, d[i].bio);
+                printf("\nID: %d\nNome: %sUsuário: %sEmail: %sPassword: %sBio: %s", d[i].id, d[i].name, d[i].user, d[i].email, d[i].password, d[i].bio);
                 n = 1;
                 if (d[i].status == 0)
                 {
@@ -365,15 +372,14 @@ int main()
                 printf("\nProcesso finalizado.\n");
                 break;
             }
-        }
+        
 
-        returnLogin = login(devs, &code);
-        printf("\n\n%d", returnLogin);
+       returnLogin = login(devs, &code);
 
-        if (returnLogin = 1)
+       if (returnLogin = 1)
         {
-            char opcao;
-            while ((opcao = Menu(menuMain)) != SAIR) //Enquanto o usu�rio n�o quiser sair, pois em todo final de processo/fun��o, ele pode clicar em sair.
+            char option;
+            while ((option = Menu(menuMain)) != SAIR) //Enquanto o usu�rio n�o quiser sair, pois em todo final de processo/fun��o, ele pode clicar em sair.
             {
                 /*printf("\n---- MENU ----\n\n");
                 resp = -1;
@@ -382,39 +388,36 @@ int main()
                 setbuf(stdin, NULL);
                 scanf("%d", &resp); //Lê a função que o usuário queira que aconteça*/
 
-                /*if ((resp == 1) || (resp == 2) || (resp == 3) || (resp == 4) || (resp == 5) || (resp == 0))
-                {*/
-                switch (opcao)
+                if ((option == CADASTRAR) || (option == DELETAR) || (option == LISTAR) || (option == CONSULTAR) || (option == SAIR))
                 {
-                case 1:
+                switch (option)
+                {
+                case '1':
                     create(devs, &code); //se for cadastro. Livro é equivalente ao ponteiro l e cont ao ponteiro cont. Precisa passar eles como parametro
                     break;
-                case 2:
+                case '2':
                     delete (devs, &code); //mesma coisa que o de cima
                     break;
-                case 3:
+                case '3':
                     list(devs, &code);
                     break;
-                case 4:
+                case '4':
                     consult(devs, &code);
                     break;
                 default:
                     printf("\nProcesso finalizado.\n");
                     break;
                 }
-                /*}
+               }
                 else
                 {
                     printf("Erro.\n");
                     system("PAUSE");
                     getchar();
-                }*/
+                }
             }
         }
-        else
-        {
-            create(devs, &code);
-        }
+      }
     }
 
     return 0;
