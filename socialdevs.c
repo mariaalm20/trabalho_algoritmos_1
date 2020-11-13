@@ -29,8 +29,8 @@ char *menuLogin[] = {
 char *menuMain[] = {
     "\n---- MENU ----\n\n",
     "1. Listar todos os desenvolvedores",
-    "3. Consultar um desenvolvedor",
-    "4. Deletar um desenvolvedor",
+    "2. Consultar um desenvolvedor",
+    "3. Deletar um desenvolvedor",
     "0. Sair",
     NULL};
 
@@ -40,7 +40,6 @@ char Menu(char *options[]){ //Necessário para selecionar as opções do menu
 
   system("clear");
 
-  fflush(stdin);
   setbuf(stdin, NULL);
 
   while(1){ //pois o usuário só pode escolher uma opção
@@ -49,7 +48,6 @@ char Menu(char *options[]){ //Necessário para selecionar as opções do menu
   }
 
   printf("\n\nOpção escolhida: ");
-  fflush(stdin);
   setbuf(stdin, NULL);
   optionChoose = getchar(); //le a opção
  
@@ -108,17 +106,7 @@ int login(struct data_devs *d, int *code)
         } while (b && try); //diferente de 0
     }
 
-    /* if (!try)
-        {
-            printf("Número máximo de tentativas alcançado! \n\nAperte enter ou qualquer tecla para retornar ao menu.\n");
-            fflush(stdin);
-            setbuf(stdin, NULL);
-
-            scanf("%c", &t);
-        }*/
-
-
-    if (validate = 1)
+    if (validate == 1)
     {
          Menu(menuMain);
          return 1;
@@ -164,7 +152,6 @@ void create(struct data_devs *d, int *code)
     setbuf(stdin, NULL);
 
     d[*code].id = (*code) + 1; //soma 1 pra n�o pegar o mesmo numero anterior
-    d[*code].status = 0;
 
     printf("\n\nCadastro realizado com sucesso.\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
     fflush(stdin);
@@ -258,25 +245,26 @@ void list(struct data_devs *d, int *code)
 
 void consult(struct data_devs *d, int *code)
 {
-    int i, ids, resp, n = 0;
+    int i, ids, optionChoose, n = 0;
     char t, dev[50];
 
     system("CLS");
-    printf("\n--- CONSULTA ---\n\n");
+    system("clear");
+    printf("\n--- CONSULTAR UM(A) DEV ---\n\n");
     printf("\nDeseja consultar pelo id ou pelo nome de usu�rio?\n");
-    printf("\nDigite:\n1- Id.\n2- Usu�rio\n");
-    scanf("%d", &resp);
-    switch (resp)
+    printf("\nDigite:\n1- Id\n2- Usuário\n");
+    scanf("%d", &optionChoose);
+    switch (optionChoose)
     {
     case 1: //caso escolha consultar pelo id
         system("clear");
-        printf("\nInsira o id do DEV a ser consultado:\n");
+        printf("\nInsira o id do DEV a ser consultado: ");
         scanf("%d", &ids);
         for (i = 0; i <= *code; i++) //percorre o vetor de devs
         {
             if (ids == d[i].id)
             {
-                printf("\nID: %d\nNome: %sUsuário: %sEmail: %sPassword: %sBio: %s", d[i].id, d[i].name, d[i].user, d[i].email, d[i].password, d[i].bio);
+                printf("\n\nID: %d\nNome: %sUsuário: %sEmail: %sPassword: %sBio: %s", d[i].id, d[i].name, d[i].user, d[i].email, d[i].password, d[i].bio);
                 n = 1;
                 if (d[i].status == 0)
                 {
@@ -365,40 +353,32 @@ int main()
             fflush(stdin);
             setbuf(stdin, NULL);
             scanf("%i", &optionMenuFirst);
-           // char menu;
-
-          // while ((menu = Menu(menuLogin)) != SAIR) {
-
-            switch (optionMenuFirst)
+        
+               
+        switch (optionMenuFirst)
             {
             case 1:
-                login(devs, &code);
+                create(devs, &code);
                 break;
             case 2:
-                create(devs, &code);
+                login(devs, &code);
                 break;
 
             default:
                 printf("\nProcesso finalizado.\n");
                 break;
             }
-          // }
+           
         
 
        returnLogin = login(devs, &code);
 
-       if (returnLogin = 1)
+       if (returnLogin == 1)
         {
             char option;
             while ((option = Menu(menuMain)) != SAIR) //Enquanto o usu�rio n�o quiser sair, pois em todo final de processo/fun��o, ele pode clicar em sair.
             {
-                /*printf("\n---- MENU ----\n\n");
-                resp = -1;
-                printf("\n1- Cadastro\n2- Remocao\n3- Listagem\n4- Consulta\n5- Atualizacao de emprestimo\n0- Sair\n");
-                fflush(stdin);
-                setbuf(stdin, NULL);
-                scanf("%d", &resp); //Lê a função que o usuário queira que aconteça*/
-
+             
                 if ((option == LISTAR) || (option == CONSULTAR) || (option == DELETAR) || (option == SAIR))
                 {
                 switch (option)
