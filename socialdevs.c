@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct post
+{
+    char title[50];
+    char image[50];
+    char description[50];
+    int code_post;
+    int likes;
+    char comment;
+};
+
 struct data_devs
 {
     char name[50];
@@ -11,14 +21,10 @@ struct data_devs
     int id;
     char bio[100];
     int status;
-    char title[50];
-    char image[50];
-    char description[50];
-    int code_post;
-    int likes;
-    int dislikes;
+    struct post posts;
     int add[40];
 };
+
 
 #define SAIR '0'
 #define DELETAR '1'
@@ -27,16 +33,8 @@ struct data_devs
 #define CREATEPOST '4'
 #define CONSULTPOST '5'
 #define UPDATEPOST '6'
-#define ADDCONNECTION '7'
-#define CONSULTCONNECTION '8'
+#define ADDOPPINION '7'
 
-
-char *menuLogin[] = {
-    "\n---- MENU ----\n\n",
-    "1. Ainda não possui uma conta? Cadastrar",
-    "2. Já possui? Efetuar Login",
-    "0. Sair",
-    NULL};
 
 char *menuMain[] = {
     "\n---- MENU ----\n\n",
@@ -46,8 +44,7 @@ char *menuMain[] = {
     "4. Criar um post",
     "5. Consultar post",
     "6. Atualizar post",
-    "7. Criar uma conexão",
-    "8. Listar conexões",
+    "7. Criar um comentário ou dar like",
     "0. Sair",
     NULL};
 
@@ -67,7 +64,6 @@ char Menu(char *options[]){ //Necessário para selecionar as opções do menu
   printf("\n\nOpção escolhida: ");
   setbuf(stdin, NULL);
   optionChoose = getchar(); //le a opção
- 
   
   for(i=0; options[i]!= NULL; i++){ //percorre o vetor 
   if(options[i][0]==optionChoose){
@@ -130,6 +126,7 @@ int login(struct data_devs *d, int *code)
          return 1;
     }
     system("clear");
+    return 0;
 }
 
 void create(struct data_devs *d, int *code)
@@ -369,13 +366,13 @@ void create_post(struct data_devs *d, int *code, int *codePost){
                fflush(stdin);
                setbuf(stdin, NULL);
                printf("Digite o título do post: ");
-               fgets(d[i].title, 10, stdin); 
+               fgets(d[i].posts.title, 10, stdin); 
                printf("Digite a url da imagem a ser colocada no post: ");
-               fgets(d[i].image, 40, stdin);
+               fgets(d[i].posts.image, 40, stdin);
                printf("Faça uma breve descrição sobre o post: ");
-               fgets(d[i].description, 100, stdin);
+               fgets(d[i].posts.description, 100, stdin);
                
-               d[*codePost].code_post = (*codePost) + 1;
+               d[*codePost].posts.code_post = (*codePost) + 1;
 
             }
         }
@@ -392,27 +389,29 @@ void create_post(struct data_devs *d, int *code, int *codePost){
         system("clear");
 }
 
-int likes(struct data_devs *d, int *code, int *codePost){
-      int i, cont=0, idPost, n; 
+/*int likes(struct data_devs *d, int *code, int *codePost){
+      int i, cont=0,cont_like=0, idPost, n, id_user;
       char t; 
       system("clear");
-       /* printf("\nInsira codigo do post: \n\n");
-        fflush(stdin);
-        setbuf(stdin, NULL);
-        scanf("%i", &idPost);
+     
         for (i = 0; i <= *code; i++) //percorre o vetor de devs
         {
-            if (idPost==d[i].code_post)
-            {
-               n=1; */
-               cont=cont+1;
-             /*}
+              printf("Insira o ID do post que queira dar o like: ");
+              scanf("%i", &id_user);
+              if( d[i].posts.likes[i] != id_user){
+                 cont_like = cont_like + 1; 
+                 n=1;
+                 cont=cont+1;
+                 d[i].posts.likes[i] = id_user; 
+              } else{
+              cont = cont -1;  
             }
+        }
         
         if (!n)
         {
             printf("Post inexistente.\n");
-        }*/
+        }
 
         printf("\n\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
         fflush(stdin);
@@ -420,61 +419,87 @@ int likes(struct data_devs *d, int *code, int *codePost){
         scanf("%c", &t);
         system("clear");
         return cont; 
-}
+}*/
 
-int dislikes(struct data_devs *d, int *code, int *codePost){
-    int i,  n, cont2=0;
-    char t; 
+char create_opinion(struct data_devs *d, int *code){
+   int i, id,j, n, idPost, opinion, cont=0, idUser;
+   char t, comment;
+
     system("clear");
-        /*printf("\nInsira o codigo do post: \n\n");
-        fflush(stdin);
-        setbuf(stdin, NULL);
-        scanf("%i", &codePost); 
-        for (i = 0; i <= *code; i++) //percorre o vetor de devs
-        {
-            if (idPost==d[i].code_post)
-            {
-                n=1;*/
-               cont2=cont2+1; 
-            /*}
+    printf("\n--- OPINIÃO SOBRE O POST ---\n\n");
+
+      
+    printf("Digite o id do post que queira dar sua opinião: ");
+    scanf("%i", &idPost);
+
+    for(i=0; i<=*code; i++){
+        if(d[i].posts.code_post == idPost){
+           printf("\n\n1- Dar like.\n 2- Comentar. \n0- Sair.\n\n");
+           scanf("%i", &opinion); 
+           n=1; 
+
+          switch (opinion)
+          {
+             case 1:
+                 n=1;
+                 cont=cont+1;
+                 d[i].posts.likes = cont; 
+                 printf("\nLike adicionado!");
+             break;
+
+             case 2:
+             printf("\nEscreva algo...\n");
+             fflush(stdin);
+             setbuf(stdin, NULL);
+             scanf("%c", &comment);
+             d[i].posts.comment = comment;
+             printf("\nComentário adicionado!");
+             break;
+
+            default:
+            printf("Escolha uma opção");
+            break;
+          }
         }
+    }
+        
         if (!n)
         {
             printf("Post inexistente.\n");
-        }*/
+        }
 
-        printf("\n\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
-        fflush(stdin);
-        setbuf(stdin, NULL);
-        scanf("%c", &t);
-        system("clear");
-        return cont2;
+
+      printf("\n\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
+      fflush(stdin);
+      setbuf(stdin, NULL);
+      scanf("%c", &t);
+      system("clear");
 }
 
-void post_consult(struct data_devs *d, int *code, int like, int dislike){
-        int i, n = 0,resp=0, id;
+
+void post_consult(struct data_devs *d, int *code){
+        int i, n = 0,resp = 0, idPost;
         char t, dev[50];
         system("clear");
         printf("\n--- POST DEV ---\n\n");
-        printf("\nInsira o ID do dev: \n");
+        printf("\nInsira o ID do post: \n");
         fflush(stdin);
         setbuf(stdin, NULL);
-        scanf("%i", &id);
+        scanf("%i", &idPost);
+
         for (i = 0; i <= *code; i++) //percorre o vetor de devs
         {
-            if (d[i].id == id)
+            if (d[i].posts.code_post == idPost)
             { 
               n=1;                
-              printf("\n -Código do post: %i\n\n -Título do post: %s\n -URL da imagem: %s\n -Descrição: %s\n -Likes: %i\n\n -Deslikes: %i\n\n",  d[i].code_post, d[i].title, d[i].image, d[i].description, d[i].likes, d[i].dislikes);
-              printf("O que achou do post?"); 
-              printf("\n\n1-Like\n\n2-Deslike\n");
-              scanf("%i", &resp); 
-              if(resp==1){
-                 d[i].likes = like;
-              }else if(resp==2){
-                 d[i].dislikes = dislike;   
-              }
-            }
+              printf("\n -Código do post: %i\n\n -Título do post: %s\n -URL da imagem: %s\n -Descrição: %s\n -Likes: %i\n -Comentário: %c\n",  
+              d[i].posts.code_post, 
+              d[i].posts.title, 
+              d[i].posts.image, 
+              d[i].posts.description, 
+              d[i].posts.likes, 
+              d[i].posts.comment);
+        }
         }
         if (!n)
         {
@@ -487,7 +512,8 @@ void post_consult(struct data_devs *d, int *code, int like, int dislike){
         system("clear");
 }
 
-void post_update(struct data_devs *d, int *code){
+void post_update(struct data_devs *d, int *code)
+{
    int i, j, idPost, n;
    char t;
     system("clear");
@@ -499,16 +525,16 @@ void post_update(struct data_devs *d, int *code){
     scanf("%i", &idPost);
 
     for(i=0; i <= *code; i++){
-      if(d[i].code_post == idPost){
+      if(d[i].posts.code_post == idPost){
             n=1;
             fflush(stdin);
             setbuf(stdin, NULL);
             printf("Digite o título a ser colocado no post: ");
-            fgets(d[i].title, 50, stdin);
+            fgets(d[i].posts.title, 50, stdin);
             printf("Digite a url da imagem a ser colocada no post: ");
-            fgets(d[i].image, 50, stdin);
+            fgets(d[i].posts.image, 50, stdin);
             printf("Faça uma breve descrição sobre o post: ");
-            fgets(d[i].description, 100, stdin);
+            fgets(d[i].posts.description, 100, stdin);
       }
     }
       if(!n){
@@ -523,39 +549,9 @@ void post_update(struct data_devs *d, int *code){
       system("clear");
 }
 
-void create_connection(struct data_devs *d, int *code){
-   int i, id,j, n;
-   char t;
-    system("clear");
-    printf("\n--- CRIAR UMA CONEXÃO ---\n\n");
 
-    printf("\nInsira o ID do dev que deseja criar uma conexão: \n");
-    fflush(stdin);
-    setbuf(stdin, NULL);
-    scanf("%i", &id);
-   for(i=0; i<=*code; i++){
-       if(d[i].id == id){
-           for(j=0; j<40; j++){
-               n=1;
-             d[i].add[j] = id;
-           }
-       }
-   }
-
-   if(!n){
-       printf("Id inexistente");
-   }else{
-      printf("Conexão adicionada!!");
-   }
-
-      printf("\n\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
-      fflush(stdin);
-      setbuf(stdin, NULL);
-      scanf("%c", &t);
-      system("clear");
-}
-
-void consult_connection(struct data_devs *d, int *code){
+void consult_connection(struct data_devs *d, int *code)
+{
     int i, j, id, n;
     char t;
 
@@ -589,7 +585,8 @@ void consult_connection(struct data_devs *d, int *code){
 
 int main()
 {
-    int code = -1, codePost = -1, i, resp, respLogin, optionMenuFirst, returnLogin, like, dislike;
+    int code = -1, codePost = -1, i, resp, respLogin, optionMenuFirst, returnLogin, like;
+    char comment;
 
     struct data_devs devs[10000];
 
@@ -639,8 +636,7 @@ int main()
                 (option == CREATEPOST)|| 
                 (option == CONSULTPOST) || 
                 (option == UPDATEPOST) ||
-                (option == ADDCONNECTION) ||
-                (option == CONSULTCONNECTION) ||
+                (option == ADDOPPINION) ||
                 (option == SAIR))
                 {
                 switch (option)
@@ -658,17 +654,13 @@ int main()
                     create_post (devs, &code, &codePost); 
                     break;
                  case '5':
-                     post_consult(devs, &code, like=likes(devs, &code, &codePost), dislike=dislikes(devs, &code, &codePost));
+                     post_consult(devs, &code);
                      break;
-                case '6':
+                 case '6':
                      post_update(devs, &code);
                      break;
                  case '7':
-                     create_connection(devs, &code);
-                     break;
-                  case '8':
-                     consult_connection(devs, &code);
-                     break;
+                      create_opinion(devs, &code);
                 default:
                     printf("\nProcesso finalizado.\n");
                     break;
