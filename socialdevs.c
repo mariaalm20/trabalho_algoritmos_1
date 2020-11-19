@@ -210,7 +210,7 @@ void delete (struct data_devs *d, int *code)
                 for (j = i; j < *code; j++)
                 {
                     d[j] = d[j + 1];
-                    d[j].id = d[j + 1].id - 1; //serve para atualizar o codigo dos devs op��es um ser removido, para não dar problema com o cadastro de novos devs depois
+                    d[j].id = d[j + 1].id - 1;
                 }
 
                 (*code)--; //pra ir diminuindo no for
@@ -491,11 +491,11 @@ char create_opinion(struct data_devs *d, int *code, int *codeOpinion)
     char t, comment;
 
     system("clear");
-    (*codeOpinion)++;
     printf("\n--- OPINIÃO SOBRE O POST ---\n\n");
 
     printf("Digite o id do post que queira dar sua opinião: ");
     scanf("%i", &idPost);
+    (*codeOpinion)++;
 
     for (i = 0; i <= *code; i++)
     {
@@ -596,7 +596,7 @@ void opinion_update(struct data_devs *d, int *code)
             n = 1;
             fflush(stdin);
             setbuf(stdin, NULL);
-            printf("\nEscreva algo...");
+            printf("\nEscreva algo...\n");
             fgets(d[i].posts.opinions.comment, 100, stdin);
         }
     }
