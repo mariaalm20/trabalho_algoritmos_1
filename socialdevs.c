@@ -57,7 +57,7 @@ char *menuMain[] = {
     NULL};
 
 char Menu(char *options[])
-{ //Necessário para selecionar as opções do menu
+{ 
     int i;
     char optionChoose;
 
@@ -66,19 +66,19 @@ char Menu(char *options[])
     setbuf(stdin, NULL);
 
     while (1)
-    { //pois o usuário só pode escolher uma opção
+    { 
         for (i = 0; options[i] != NULL; i++)
-        {                                 //percorre o vetor do menu e não mostra a opção null
-            printf("%s\n\n", options[i]); //mostra as opções na tela
+        {                                
+            printf("%s\n\n", options[i]);
         }
 
         printf("\n\nOpção escolhida: ");
         setbuf(stdin, NULL);
-        optionChoose = getchar(); //le a opção
+        optionChoose = getchar(); 
 
         for (i = 0; options[i] != NULL; i++)
-        { //percorre o vetor
-            if (options[i][0] == optionChoose)
+        { 
+            if (*options[i] == optionChoose)
             {
                 return optionChoose;
             }
@@ -131,7 +131,7 @@ int login(struct data_devs *d, int *code)
                 b = 1;
                 validate = 0;
             }
-        } while (b && try); //diferente de 0
+        } while (b && try); 
     }
 
     if (validate == 1)
@@ -145,14 +145,14 @@ int login(struct data_devs *d, int *code)
 
 void create(struct data_devs *d, int *code)
 {
-    char t; //s�o pra definir uma tecla de atalho
+    char t; 
 
     system("clear");
     printf("\n--- CADASTRO DE DEVS ---\n\n");
     fflush(stdin);
     setbuf(stdin, NULL);
 
-    (*code)++; //pega a posi��o do dev
+    (*code)++; 
 
     printf("\nDigite seu melhor email:\n");
     fgets(d[*code].email, 50, stdin);
@@ -179,51 +179,15 @@ void create(struct data_devs *d, int *code)
     fflush(stdin);
     setbuf(stdin, NULL);
 
-    d[*code].id = (*code) + 1; //soma 1 pra n�o pegar o mesmo numero anterior
+    d[*code].id = (*code) + 1; 
 
     printf("\n\nCadastro realizado com sucesso.\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
     fflush(stdin);
     setbuf(stdin, NULL);
-    scanf("%c", &t); //le a tecla que o usu�rio digitar
+    scanf("%c", &t); 
     system("clear");
 }
 
-void delete (struct data_devs *d, int *code)
-{
-    int i, j, idRemove;
-    char t;
-
-    //system("CLS");
-    system("clear");
-
-    printf("\n--- REMOCAO DE DEV---\n\n");
-    fflush(stdin);
-    printf("Qual o id do dev que deseja excluir?\n");
-    scanf("%d", &idRemove);
-
-    if (*code >= 0)
-    {                                //se existir devs cadastrados
-        for (i = 0; i <= *code; i++) //percorre o vetor de devs para achar o c�digo
-        {
-            if (d[i].id == idRemove)
-            { //se o código da vez que estiver no for, for igual ao c�digo que o usu�rio digitou
-                for (j = i; j < *code; j++)
-                {
-                    d[j] = d[j + 1];
-                    d[j].id = d[j + 1].id - 1;
-                }
-
-                (*code)--; //pra ir diminuindo no for
-            }
-        }
-    }
-    printf("\n\nDev removido.\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
-    fflush(stdin);
-    setbuf(stdin, NULL);
-    scanf("%c", &t);
-
-    system("clear");
-}
 
 void list(struct data_devs *d, int *code)
 {
@@ -271,6 +235,44 @@ void list(struct data_devs *d, int *code)
     system("clear");
 }
 
+
+void delete (struct data_devs *d, int *code)
+{
+    int i, j, idRemove;
+    char t;
+
+    system("CLS");
+    system("clear");
+
+    printf("\n--- REMOCAO DE DEV---\n\n");
+    fflush(stdin);
+    printf("Qual o id do dev que deseja excluir?\n");
+    scanf("%d", &idRemove);
+
+    if (*code >= 0)
+    {                              
+        for (i = 0; i <= *code; i++) 
+        {
+            if (d[i].id == idRemove)
+            {  
+                for (j = i; j < *code; j++) // percorre o vetor pra poder susbtituir os outros
+                {
+                    d[j] = d[j + 1]; //d na posição 0, recebe o d na posição 1. d[1] = d[2], pra ir substituindo no for
+                    d[j].id = d[j + 1].id - 1; //pega o id da pessoa e diminui 1
+                }
+
+                (*code)--; //diminui o tamanho do vetor.
+            }
+        }
+    }
+    printf("\n\nDev removido.\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
+    fflush(stdin);
+    setbuf(stdin, NULL);
+    scanf("%c", &t);
+
+    system("clear");
+}
+
 void consult(struct data_devs *d, int *code)
 {
     int i, ids, optionChoose, n = 0;
@@ -284,11 +286,11 @@ void consult(struct data_devs *d, int *code)
     scanf("%d", &optionChoose);
     switch (optionChoose)
     {
-    case 1: //caso escolha consultar pelo id
+    case 1: 
         system("clear");
         printf("\nInsira o id do DEV a ser consultado: ");
         scanf("%d", &ids);
-        for (i = 0; i <= *code; i++) //percorre o vetor de devs
+        for (i = 0; i <= *code; i++) 
         {
             if (ids == d[i].id)
             {
@@ -316,13 +318,13 @@ void consult(struct data_devs *d, int *code)
         system("clear");
         break;
 
-    case 2: //caso escolha consultar pelo usu�rio;
+    case 2: 
         system("clear");
         printf("\nInsira o nome do usuário: \n\n");
         fflush(stdin);
         setbuf(stdin, NULL);
         fgets(dev, 50, stdin);
-        for (i = 0; i <= *code; i++) //percorre o vetor de devs
+        for (i = 0; i <= *code; i++) 
         {
             if (strcmp(dev, d[i].user) == 0)
             {
@@ -350,7 +352,7 @@ void consult(struct data_devs *d, int *code)
         system("clear");
         break;
 
-    default: //caso n�o escolha nenhuma das op��es.
+    default: 
         system("CLS");
         printf("\nOpcao invalida.\n");
         printf("\n\nAperte enter ou qualquer tecla seguida por enter para retornar ao menu.\n");
@@ -373,7 +375,7 @@ void create_post(struct data_devs *d, int *code, int *codePost)
     setbuf(stdin, NULL);
     scanf("%i", &id);
     (*codePost)++;
-    for (i = 0; i <= *code; i++) //percorre o vetor de devs
+    for (i = 0; i <= *code; i++) 
     {
         if (d[i].id == id)
         {
@@ -417,7 +419,7 @@ void post_consult(struct data_devs *d, int *code)
     setbuf(stdin, NULL);
     scanf("%i", &idPost);
 
-    for (i = 0; i <= *code; i++) //percorre o vetor de devs
+    for (i = 0; i <= *code; i++) 
     {
         if (d[i].posts.code_post == idPost)
         {
@@ -555,7 +557,7 @@ void opinion_consult(struct data_devs *d, int *code)
     setbuf(stdin, NULL);
     scanf("%i", &idOpinion);
 
-    for (i = 0; i <= *code; i++) //percorre o vetor de devs
+    for (i = 0; i <= *code; i++) 
     {
         if (d[i].posts.opinions.code_opinion == idOpinion)
         {
@@ -615,18 +617,96 @@ void opinion_update(struct data_devs *d, int *code)
     system("clear");
 }
 
+ void arq_open(struct data_devs *d, int *code){
+    int i;
+    FILE *fp;
+    fp = fopen("arqdev.txt", "r+");
+
+    if (fp == NULL){
+        fp = fopen("arqdev.txt", "w+");
+    }else{
+        for(i=0; i<=*code; i++){
+            fscanf(fp, "%i", &d[i].id);
+            fgets(d[i].email, 50, fp);
+            fgets(d[i].name, 50, fp);
+            fgets(d[i].user, 50, fp);
+            fgets(d[i].bio, 100, fp);
+            fscanf(fp, "%i\n", &d[i].status);
+
+            fscanf(fp, "%i", &d[i].posts.code_post);
+            fgets(d[i].posts.title, 50, fp);
+            fgets(d[i].posts.image, 50, fp);
+            fgets(d[i].posts.description, 50, fp);
+
+            fscanf(fp, "%i", &d[i].posts.opinions.code_opinion);
+            fscanf(fp, "%i", &d[i].posts.opinions.likes);
+            fgets(d[i].posts.opinions.comment, 50, fp);
+
+        }
+    }
+  fclose(fp); 
+}
+
+ void arq_save(struct data_devs *d, int *code){
+    int i;
+    FILE *fp; 
+    fp = fopen("arqdev.txt", "w+");
+    
+    for(i=0; i<=*code; i++){
+            fprintf(fp, "%s","Id: ");
+            fprintf(fp, "%i\n", d[i].id);
+
+            fprintf(fp, "%s","Email: ");
+            fprintf(fp, "%s", d[i].email);
+
+            fprintf(fp, "%s","Nome: ");
+            fprintf(fp, "%s", d[i].name);
+
+            fprintf(fp, "%s","Usuário: ");
+            fprintf(fp, "%s", d[i].user);
+
+            fprintf(fp, "%s","Bio: ");
+            fprintf(fp, "%s", d[i].bio);
+
+            if(d[i].status == 0){
+              fprintf(fp, "%s\n\n","Status: Ativo");
+            }
+            
+            fprintf(fp, "%s","Código do Post: ");
+            fprintf(fp, "%i\n", d[i].posts.code_post);
+
+            fprintf(fp, "%s","Título do Post: ");
+            fprintf(fp, "%s", d[i].posts.title);
+
+            fprintf(fp, "%s","Url do Post: ");
+            fprintf(fp, "%s", d[i].posts.image);
+
+            fprintf(fp, "%s","Descrição do Post: ");
+            fprintf(fp, "%s\n", d[i].posts.description);
+            
+            fprintf(fp, "%s","Código da opinião: ");
+            fprintf(fp, "%i\n", d[i].posts.opinions.code_opinion);
+
+            fprintf(fp, "%s","Likes: ");
+            fprintf(fp, "%i\n", d[i].posts.opinions.likes);
+
+            fprintf(fp, "%s","Comentários: ");
+            fprintf(fp, "%s", d[i].posts.opinions.comment);
+    }
+    fclose(fp);
+ }
+
 
 int main()
 {
-    int code = -1, codePost = -1, codeOpinion = -1, i, resp, respLogin, optionMenuFirst, returnLogin, like;
-    char comment;
+    int code = -1, codePost = -1, codeOpinion = -1, i, resp, optionMenuFirst, returnLogin;
 
     struct data_devs devs[10000];
 
     printf("\n\n1- Acessar opções do menu.\n0- Sair.\n\n");
     scanf("%d", &resp);
 
-    if (resp == 1) //1 = Acessa menu
+    if (resp == 1)
     {
         system("clear");
 
@@ -650,14 +730,14 @@ int main()
                 printf("\nProcesso finalizado.\n");
                 break;
             }
-
+         
             returnLogin = login(devs, &code);
-
+              
             if (returnLogin == 1)
             {
                 char option;
 
-                while ((option = Menu(menuMain)) != SAIR) //Enquanto o usu�rio n�o quiser sair, pois em todo final de processo/fun��o, ele pode clicar em sair.
+                while ((option = Menu(menuMain)) != SAIR) 
                 {
 
                     if ((option == LISTAR) ||
@@ -708,13 +788,14 @@ int main()
                     else
                     {
                         printf("Erro.\n");
-                        system("PAUSE");
-                        getchar();
                     }
+
                 }
+                 arq_save(devs, &code);
+                 arq_open(devs, &code); 
             }
         }
     }
-
+   
     return 0;
 }
